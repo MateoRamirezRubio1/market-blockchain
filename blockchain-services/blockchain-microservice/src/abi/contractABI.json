@@ -1,0 +1,182 @@
+[
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_buyer",
+                "type": "address"
+            },
+            {
+                "internalType": "uint32",
+                "name": "_energyAmount",
+                "type": "uint32"
+            },
+            {
+                "internalType": "uint32",
+                "name": "_pricePerEnergyUnit",
+                "type": "uint32"
+            },
+            {
+                "internalType": "uint32",
+                "name": "_tradeStart",
+                "type": "uint32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_contractTermsHash",
+                "type": "bytes32"
+            }
+        ],
+        "name": "createTrade",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_tradeId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "_isSuccessful",
+                "type": "bool"
+            }
+        ],
+        "name": "confirmTrade",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_tradeId",
+                "type": "uint256"
+            }
+        ],
+        "name": "getTradeById",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "buyer",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "seller",
+                "type": "address"
+            },
+            {
+                "internalType": "uint32",
+                "name": "energyAmount",
+                "type": "uint32"
+            },
+            {
+                "internalType": "uint32",
+                "name": "tradeStart",
+                "type": "uint32"
+            },
+            {
+                "internalType": "uint8",
+                "name": "status",
+                "type": "uint8"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "contractTermsHash",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "uint32",
+                "name": "pricePerEnergyUnit",
+                "type": "uint32"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "tradeId",
+                "type": "uint256"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "seller",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "buyer",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint32",
+                "name": "energyAmount",
+                "type": "uint32"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint32",
+                "name": "pricePerEnergyUnit",
+                "type": "uint32"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint32",
+                "name": "tradeStart",
+                "type": "uint32"
+            },
+            {
+                "indexed": false,
+                "internalType": "bytes32",
+                "name": "contractTermsHash",
+                "type": "bytes32"
+            }
+        ],
+        "name": "TradeCreated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "tradeId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint8",
+                "name": "status",
+                "type": "uint8"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint32",
+                "name": "energyConsumed",
+                "type": "uint32"
+            }
+        ],
+        "name": "TradeConfirmed",
+        "type": "event"
+    }
+]

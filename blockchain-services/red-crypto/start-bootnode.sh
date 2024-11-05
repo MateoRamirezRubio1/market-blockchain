@@ -1,0 +1,1 @@
+bootnode -nodekey /red-crypto/boot.key -addr :30305

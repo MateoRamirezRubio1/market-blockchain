@@ -1,0 +1,2 @@
+geth init --datadir /red-crypto/node2 /red-crypto/genesis.json
+geth --datadir /red-crypto/node2 --port 30307 --bootnodes enode://f3696ad0b13d5dfb03547fa4ff8392cb4e17a1adc956761ecb8a1fb8199a8f3b7807e7c13f9ba2e3b3c48c57180b152ac53748c43068940026c59dfd40fc635d@127.0.0.1:0?discport=30305 --networkid 41124321 --unlock 0x0F27Ce7E32440e7F4CACEBAc9Aa6c253932B109f --password node2/password.txt --authrpc.port 8552

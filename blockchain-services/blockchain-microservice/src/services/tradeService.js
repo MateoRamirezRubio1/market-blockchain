@@ -1,0 +1,170 @@
+const { provider, contractABI, contractAddress } = require('../config/ethersConfig');
+const { checkAndTransferEther } = require('../utils/etherUtils');
+const ethers = require('ethers');
+
+// Obtener la clave privada del usuario
+const getUserPrivateKey = require('../services/gcpSecretManagerService').accessSecret;
+const getUserAddressById = require('../services/blockchainService').getUserById;
+
+const createTrade = async (userId, tradeData) => {
+    try {
+        // Obtener la dirección del usuario a partir del ID
+        const user = await getUserAddressById(userId);
+        const userAddress = user.public_key;
+
+        // Crear instancia del contrato
+        const wallet = new ethers.Wallet(await getUserPrivateKey(userId), provider);
+        const contractABI = [
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_buyer",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint32",
+                        "name": "_energyAmount",
+                        "type": "uint32"
+                    },
+                    {
+                        "internalType": "uint32",
+                        "name": "_pricePerEnergyUnit",
+                        "type": "uint32"
+                    },
+                    {
+                        "internalType": "uint32",
+                        "name": "_tradeStart",
+                        "type": "uint32"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "_contractTermsHash",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "createTrade",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+        ];
+
+        const contract = new ethers.Contract(contractAddress, contractABI, wallet);
+
+        const currentTimestamp = Math.floor(Date.now() / 1000);
+
+        const gasEstimate = await contract.createTrade.estimateGas(
+            tradeData.buyer,
+            tradeData.energyAmount,
+            tradeData.pricePerEnergyUnit,
+            currentTimestamp, // tradeStart como el tiempo actual
+            tradeData.contractTermsHash
+        );
+        await checkAndTransferEther(userAddress, gasEstimate);
+
+        // Crear la transacción firmada
+        userBalance = await provider.getBalance(userAddress);
+        console.log(`User balance in: ${userBalance}`);
+        const tx = await contract.createTrade(
+            tradeData.buyer,
+            tradeData.energyAmount,
+            tradeData.pricePerEnergyUnit,
+            currentTimestamp, // tradeStart como el tiempo actual
+            tradeData.contractTermsHash
+        );
+
+        const receipt = await tx.wait();
+        return receipt;
+    } catch (error) {
+        console.error('Error creating trade:', error);
+        throw new Error(`Failed to create trade ${error}`);
+    }
+};
+
+// Función para obtener un trade por ID
+const getTradeById = async (tradeId) => {
+    try {
+        const contractABI = [
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_tradeId",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "getTradeById",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "buyer",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "seller",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint32",
+                        "name": "energyAmount",
+                        "type": "uint32"
+                    },
+                    {
+                        "internalType": "uint32",
+                        "name": "tradeStart",
+                        "type": "uint32"
+                    },
+                    {
+                        "internalType": "uint8",
+                        "name": "status",
+                        "type": "uint8"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "contractTermsHash",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "uint32",
+                        "name": "pricePerEnergyUnit",
+                        "type": "uint32"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+        ];
+
+        // Crear instancia del contrato
+        const contract = new ethers.Contract(contractAddress, contractABI, provider);
+
+        // Llamar a la función getTradeById del contrato
+        const trade = await contract.getTradeById(tradeId);
+
+        return {
+            buyer: trade.buyer,
+            seller: trade.seller,
+            energyAmount: trade.energyAmount.toNumber,
+            tradeStart: trade.tradeStart.toNumber,
+            status: trade.status.toString(),
+            contractTermsHash: trade.contractTermsHash,
+            pricePerEnergyUnit: trade.pricePerEnergyUnit.toNumber,
+        };
+    } catch (error) {
+        console.error('Error fetching trade:', error);
+        throw new Error(`Failed to fetch trade: ${error.message}`);
+    }
+};
+
+module.exports = {
+    createTrade,
+    getTradeById,
+};
