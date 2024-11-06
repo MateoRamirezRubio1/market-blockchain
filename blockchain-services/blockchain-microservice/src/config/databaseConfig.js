@@ -8,7 +8,13 @@ const sequelize = new Sequelize(
     {
         host: process.env.DB_HOST,         // Host de la base de datos (ej. localhost)
         dialect: 'postgres',                // Dialecto de la base de datos
-        logging: false,                     // Configura a true para habilitar el logging de las consultas
+        logging: false,                     // true para habilitar el logging de las consultas
+        retry: {
+            max: 5, // Número de reintentos para conectarse a la base de datos
+            match: [
+                /ECONNREFUSED/,
+            ],
+        },
     }
 );
 

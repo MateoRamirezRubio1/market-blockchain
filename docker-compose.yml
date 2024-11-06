@@ -1,0 +1,95 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./blockchain-services/blockchain-microservice
+      dockerfile: Dockerfile
+    ports:
+      - "${PORT}:3000"
+    environment:
+      - PORT=${PORT}
+      - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
+      - GCP_PROJECT_ID=${GCP_PROJECT_ID}
+      - GCP_PROJECT_NUMBER=${GCP_PROJECT_NUMBER}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - ADMIN_PRIVATE_KEY=${ADMIN_PRIVATE_KEY}
+      - NODE_URL=${NODE_URL}
+      - CONTRACT_ADDRESS=${CONTRACT_ADDRESS}
+    volumes:
+      - ./blockchain-services/blockchain-microservice/solargauge-66f76767c6a9.json:/app/solargauge-66f76767c6a9.json
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./blockchain-services/blockchain-microservice/init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+  miner:
+    # Definición del servicio para el nodo minero
+    build:
+      context: ./blockchain-services/red-crypto # Ruta Dockerfile del nodo
+      dockerfile: Dockerfile
+    ports:
+      - "8545:8545"
+    command: [ "sh", "-c", "/red-crypto/start-node1.sh" ] #[ "sh", "-c", "tail -f /dev/null" ]
+    volumes:
+      - miner_data:/app/miner-data
+    networks:
+      - app-network
+
+  market-bill:
+    build:
+      context: ./market-bill-microservice
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db_market
+    environment:
+      - DB_HOST=db_market
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=market_bill_microservice
+    networks:
+      - app-network
+
+  db_market:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: market_bill_microservice
+    volumes:
+      - postgres_data_market:/var/lib/postgresql/data
+      - ./market-bill-microservice/init:/docker-entrypoint-initdb.d
+    ports:
+      - "5433:5432"
+    networks:
+      - app-network
+
+volumes:
+  postgres_data: {}
+  miner_data: {}
+  postgres_data_market: {}
+
+networks:
+  app-network:
+    driver: bridge

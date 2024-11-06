@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Contrato de Transacción de Energía</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            text-align: center;
+            color: #2C3E50;
+        }
+
+        .content {
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+
+        .section-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #34495E;
+            margin-top: 20px;
+        }
+
+        .section-content {
+            padding-left: 15px;
+        }
+
+        .highlight {
+            color: #2980B9;
+            font-weight: bold;
+        }
+
+        .penalty {
+            color: #E74C3C;
+        }
+
+        .contract-terms {
+            font-size: 0.9em;
+            color: #7F8C8D;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.8em;
+            color: #7F8C8D;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Contrato de Transacción de Energía</h1>
+    <h2>Entre el Comprador y el Vendedor</h2>
+
+    <div class="content">
+        <p><strong>Fecha de celebración del contrato:</strong> <span class="highlight">16 de octubre de 2023</span></p>
+
+        <div class="section">
+            <h3 class="section-title">1. Partes Contratantes</h3>
+            <div class="section-content">
+                <p><strong>Comprador:</strong> <span class="highlight">{{ buyer }}</span></p>
+                <p><strong>Vendedor:</strong> <span class="highlight">{{ seller }}</span></p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3 class="section-title">2. Objeto del Contrato</h3>
+            <div class="section-content">
+                <p>El presente contrato tiene como objeto la compraventa de energía en cantidad de <span
+                        class="highlight">{{ energyAmount }} kWh</span>, bajo los términos y condiciones establecidos en
+                    este documento.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3 class="section-title">3. Obligaciones de las Partes</h3>
+            <div class="section-content">
+                <p><strong>Obligaciones del Vendedor:</strong></p>
+                <ul>
+                    <li>Suministrar la energía pactada de acuerdo con la cantidad y calidad acordada.</li>
+                    <li>Respetar los términos y condiciones del presente contrato.</li>
+                    <li>Entregar la energía en el tiempo estipulado.</li>
+                </ul>
+                <p><strong>Obligaciones del Comprador:</strong></p>
+                <ul>
+                    <li>Realizar el pago correspondiente por el suministro de energía en la forma y tiempo estipulado.
+                    </li>
+                    <li>Respetar las condiciones del presente contrato.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3 class="section-title">4. Precio y Forma de Pago</h3>
+            <div class="section-content">
+                <p>El precio de la energía será de <span class="highlight">{{ pricePerEnergyUnit }} USD</span> por cada
+                    unidad de energía (kWh), con un total de <span class="highlight">{{ pricePerEnergyUnit *
+                        energyAmount }} USD</span>. El pago se realizará de acuerdo con los términos definidos en el
+                    contrato.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3 class="section-title">5. Penalización por Incumplimiento</h3>
+            <div class="section-content">
+                <p>En caso de incumplimiento en la entrega de la energía en el tiempo pactado, se aplicará una
+                    penalización a cargo del Vendedor de:</p>
+                <p><strong>Penalización:</strong> <span class="highlight penalty">{{ penalty_amount }} {{ currency
+                        }}</span></p>
+                <p><strong>Razón:</strong> <span class="highlight">{{ reason }}</span></p>
+                <p><strong>Estado de la penalización:</strong> <span class="highlight">{{ status }}</span></p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3 class="section-title">6. Duración y Terminación del Contrato</h3>
+            <div class="section-content">
+                <p>Este contrato tendrá una duración desde la fecha de inicio hasta el cumplimiento de todas las
+                    obligaciones. Podrá terminar anticipadamente en caso de mutuo acuerdo o por incumplimiento de alguna
+                    de las partes, siguiendo los procedimientos legales aplicables.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3 class="section-title">7. Resolución de Conflictos</h3>
+            <div class="section-content">
+                <p>En caso de conflicto o desacuerdo sobre la interpretación o ejecución de este contrato, las partes
+                    acuerdan someterse a un proceso de conciliación. De no llegar a un acuerdo, la controversia será
+                    resuelta ante los jueces de la República de Colombia.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3 class="section-title">8. Firma y Aceptación</h3>
+            <div class="section-content">
+                <p>El Comprador y el Vendedor, al firmar este documento, declaran estar de acuerdo con todos los
+                    términos y condiciones establecidos en el presente contrato.</p>
+                <p><strong>Comprador:</strong> _______________________</p>
+                <p><strong>Vendedor:</strong> _______________________</p>
+                <p><strong>Fecha:</strong> _______________________</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Este contrato es generado electrónicamente y constituye un acuerdo legalmente vinculante entre ambas partes
+            de acuerdo con las leyes vigentes en Colombia.</p>
+    </div>
+
+</body>
+
+</html>

@@ -54,6 +54,20 @@ const createTrade = async (userId, tradeData) => {
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
+            {
+                "anonymous": false,
+                "inputs": [
+                    { "indexed": true, "internalType": "uint256", "name": "tradeId", "type": "uint256" },
+                    { "indexed": true, "internalType": "address", "name": "seller", "type": "address" },
+                    { "indexed": true, "internalType": "address", "name": "buyer", "type": "address" },
+                    { "internalType": "uint32", "name": "energyAmount", "type": "uint32" },
+                    { "internalType": "uint32", "name": "pricePerEnergyUnit", "type": "uint32" },
+                    { "internalType": "uint32", "name": "tradeStart", "type": "uint32" },
+                    { "internalType": "bytes32", "name": "contractTermsHash", "type": "bytes32" }
+                ],
+                "name": "TradeCreated",
+                "type": "event"
+            }
         ];
 
         const contract = new ethers.Contract(contractAddress, contractABI, wallet);
@@ -72,6 +86,7 @@ const createTrade = async (userId, tradeData) => {
         // Crear la transacción firmada
         userBalance = await provider.getBalance(userAddress);
         console.log(`User balance in: ${userBalance}`);
+
         const tx = await contract.createTrade(
             tradeData.buyer,
             tradeData.energyAmount,
@@ -81,6 +96,7 @@ const createTrade = async (userId, tradeData) => {
         );
 
         const receipt = await tx.wait();
+
         return receipt;
     } catch (error) {
         console.error('Error creating trade:', error);
@@ -143,24 +159,25 @@ const getTradeById = async (tradeId) => {
             },
         ];
 
+        console.log(tradeId);
         // Crear instancia del contrato
         const contract = new ethers.Contract(contractAddress, contractABI, provider);
 
         // Llamar a la función getTradeById del contrato
-        const trade = await contract.getTradeById(tradeId);
+        const trade = await contract.getTradeById(Number(tradeId));
 
         return {
             buyer: trade.buyer,
             seller: trade.seller,
-            energyAmount: trade.energyAmount.toNumber,
-            tradeStart: trade.tradeStart.toNumber,
+            energyAmount: trade.energyAmount.toString(),
+            tradeStart: trade.tradeStart.toString(),
             status: trade.status.toString(),
             contractTermsHash: trade.contractTermsHash,
-            pricePerEnergyUnit: trade.pricePerEnergyUnit.toNumber,
+            pricePerEnergyUnit: trade.pricePerEnergyUnit.toString(),
         };
     } catch (error) {
         console.error('Error fetching trade:', error);
-        throw new Error(`Failed to fetch trade: ${error.message}`);
+        throw new Error(`Failed to fetch trade: ${error}`);
     }
 };
 
