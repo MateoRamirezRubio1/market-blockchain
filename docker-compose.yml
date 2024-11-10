@@ -69,6 +69,8 @@ services:
       - DB_NAME=market_bill_microservice
     networks:
       - app-network
+    volumes:
+      - ./market-bill-microservice/pdfs:/app/pdfs
 
   db_market:
     image: postgres:latest

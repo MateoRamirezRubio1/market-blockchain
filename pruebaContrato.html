@@ -8,156 +8,134 @@
         body {
             font-family: Arial, sans-serif;
             color: #333;
-            margin: 0;
-            padding: 20px;
+            margin: 40px;
+            padding: 0;
+            line-height: 1.5;
         }
 
-        h1,
-        h2,
-        h3 {
+        h1 {
             text-align: center;
+            font-size: 24px;
             color: #2C3E50;
         }
 
-        .content {
-            margin: 20px 0;
-            line-height: 1.6;
+        h2,
+        h3 {
+            font-size: 20px;
+            color: #34495E;
+        }
+
+        p {
+            margin: 10px 0;
+        }
+
+        .section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
         }
 
         .section-title {
+            font-size: 18px;
             font-weight: bold;
-            font-size: 1.1em;
-            color: #34495E;
-            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #2C3E50;
+            text-transform: uppercase;
+            text-align: center;
         }
 
-        .section-content {
-            padding-left: 15px;
+        .content {
+            font-size: 14px;
         }
 
         .highlight {
+            font-weight: bold;
             color: #2980B9;
+        }
+
+        .penalty-info {
+            color: #E74C3C;
             font-weight: bold;
         }
 
-        .penalty {
-            color: #E74C3C;
-        }
-
-        .contract-terms {
-            font-size: 0.9em;
-            color: #7F8C8D;
-        }
-
-        .footer {
-            margin-top: 40px;
+        .approval-note {
+            font-style: italic;
             text-align: center;
-            font-size: 0.8em;
+            margin-top: 40px;
+            color: #34495E;
+        }
+
+        .date {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 20px;
             color: #7F8C8D;
         }
     </style>
 </head>
 
 <body>
-
     <h1>Contrato de Transacción de Energía</h1>
-    <h2>Entre el Comprador y el Vendedor</h2>
+    <p class="date">Fecha de emisión: <span class="highlight">{{ confirmation_date }}</span></p>
 
-    <div class="content">
-        <p><strong>Fecha de celebración del contrato:</strong> <span class="highlight">16 de octubre de 2023</span></p>
-
-        <div class="section">
-            <h3 class="section-title">1. Partes Contratantes</h3>
-            <div class="section-content">
-                <p><strong>Comprador:</strong> <span class="highlight">{{ buyer }}</span></p>
-                <p><strong>Vendedor:</strong> <span class="highlight">{{ seller }}</span></p>
-            </div>
-        </div>
-
-        <div class="section">
-            <h3 class="section-title">2. Objeto del Contrato</h3>
-            <div class="section-content">
-                <p>El presente contrato tiene como objeto la compraventa de energía en cantidad de <span
-                        class="highlight">{{ energyAmount }} kWh</span>, bajo los términos y condiciones establecidos en
-                    este documento.</p>
-            </div>
-        </div>
-
-        <div class="section">
-            <h3 class="section-title">3. Obligaciones de las Partes</h3>
-            <div class="section-content">
-                <p><strong>Obligaciones del Vendedor:</strong></p>
-                <ul>
-                    <li>Suministrar la energía pactada de acuerdo con la cantidad y calidad acordada.</li>
-                    <li>Respetar los términos y condiciones del presente contrato.</li>
-                    <li>Entregar la energía en el tiempo estipulado.</li>
-                </ul>
-                <p><strong>Obligaciones del Comprador:</strong></p>
-                <ul>
-                    <li>Realizar el pago correspondiente por el suministro de energía en la forma y tiempo estipulado.
-                    </li>
-                    <li>Respetar las condiciones del presente contrato.</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="section">
-            <h3 class="section-title">4. Precio y Forma de Pago</h3>
-            <div class="section-content">
-                <p>El precio de la energía será de <span class="highlight">{{ pricePerEnergyUnit }} USD</span> por cada
-                    unidad de energía (kWh), con un total de <span class="highlight">{{ pricePerEnergyUnit *
-                        energyAmount }} USD</span>. El pago se realizará de acuerdo con los términos definidos en el
-                    contrato.</p>
-            </div>
-        </div>
-
-        <div class="section">
-            <h3 class="section-title">5. Penalización por Incumplimiento</h3>
-            <div class="section-content">
-                <p>En caso de incumplimiento en la entrega de la energía en el tiempo pactado, se aplicará una
-                    penalización a cargo del Vendedor de:</p>
-                <p><strong>Penalización:</strong> <span class="highlight penalty">{{ penalty_amount }} {{ currency
-                        }}</span></p>
-                <p><strong>Razón:</strong> <span class="highlight">{{ reason }}</span></p>
-                <p><strong>Estado de la penalización:</strong> <span class="highlight">{{ status }}</span></p>
-            </div>
-        </div>
-
-        <div class="section">
-            <h3 class="section-title">6. Duración y Terminación del Contrato</h3>
-            <div class="section-content">
-                <p>Este contrato tendrá una duración desde la fecha de inicio hasta el cumplimiento de todas las
-                    obligaciones. Podrá terminar anticipadamente en caso de mutuo acuerdo o por incumplimiento de alguna
-                    de las partes, siguiendo los procedimientos legales aplicables.</p>
-            </div>
-        </div>
-
-        <div class="section">
-            <h3 class="section-title">7. Resolución de Conflictos</h3>
-            <div class="section-content">
-                <p>En caso de conflicto o desacuerdo sobre la interpretación o ejecución de este contrato, las partes
-                    acuerdan someterse a un proceso de conciliación. De no llegar a un acuerdo, la controversia será
-                    resuelta ante los jueces de la República de Colombia.</p>
-            </div>
-        </div>
-
-        <div class="section">
-            <h3 class="section-title">8. Firma y Aceptación</h3>
-            <div class="section-content">
-                <p>El Comprador y el Vendedor, al firmar este documento, declaran estar de acuerdo con todos los
-                    términos y condiciones establecidos en el presente contrato.</p>
-                <p><strong>Comprador:</strong> _______________________</p>
-                <p><strong>Vendedor:</strong> _______________________</p>
-                <p><strong>Fecha:</strong> _______________________</p>
-            </div>
-        </div>
+    <div class="section">
+        <h2 class="section-title">1. Partes Contratantes</h2>
+        <p><strong>Vendedor:</strong> <span class="highlight">{{ seller_name }}</span></p>
+        <p><strong>Comprador:</strong> <span class="highlight">{{ buyer_name }}</span></p>
     </div>
 
-    <div class="footer">
-        <p>Este contrato es generado electrónicamente y constituye un acuerdo legalmente vinculante entre ambas partes
-            de acuerdo con las leyes vigentes en Colombia.</p>
+    <div class="section">
+        <h2 class="section-title">2. Objeto del Contrato</h2>
+        <p>Este contrato certifica la transacción de energía entre el <strong>vendedor</strong> y el
+            <strong>comprador</strong> en los siguientes términos:
+        </p>
+        <p><strong>ID de la Oferta:</strong> <span class="highlight">{{ offer_id }}</span></p>
+        <p><strong>Cantidad de energía:</strong> <span class="highlight">{{ energy_amount }} kWh</span></p>
+        <p><strong>Precio por unidad:</strong> <span class="highlight">{{ price_per_unit }} USD/kWh</span></p>
+        <p><strong>Tipo de oferta:</strong> <span class="highlight">{{ offer_type }}</span> (Buy/Sell)</p>
+        <p><strong>Estado de la oferta:</strong> <span class="highlight">{{ status }}</span></p>
     </div>
 
+    <div class="section">
+        <h2 class="section-title">3. Condiciones de Cumplimiento</h2>
+        <p>El cumplimiento de la transacción se verificará después de la fecha de compra para asegurar que el traspaso y
+            consumo de energía se hayan realizado según los términos aquí establecidos.</p>
+        <p><strong>Fecha y Hora de Transferencia de Energía:</strong> <span class="highlight">{{ transfer_datetime
+                }}</span></p>
+        <p><strong>Fecha de Expiración de la Oferta:</strong> <span class="highlight">{{ expiration_time }}</span></p>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">4. Penalización por Incumplimiento</h2>
+        <p>En caso de que no se cumplan las condiciones acordadas, se aplicará una penalización a la parte incumplidora,
+            detallada a continuación:</p>
+        <p><strong>Monto de la Penalización:</strong> <span class="penalty-info">{{ penalty_amount }} {{ currency
+                }}</span></p>
+        <p><strong>Razón:</strong> <span class="highlight">{{ penalty_reason }}</span></p>
+        <p><strong>Estado de la Penalización:</strong> <span class="highlight">{{ penalty_status }}</span></p>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">5. Términos y Condiciones</h2>
+        <p>Ambas partes aceptan cumplir con los siguientes términos y condiciones para validar el presente contrato:</p>
+        <p><span class="content">{{ terms_conditions }}</span></p>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">6. Resolución de Disputas</h2>
+        <p>Cualquier disputa que surja en relación con este contrato será resuelta en primer lugar mediante
+            conciliación. En caso de no llegar a un acuerdo, las partes se someten a la jurisdicción de los tribunales
+            competentes.</p>
+    </div>
+
+    <div class="approval-note">
+        Este contrato ha sido revisado y aprobado por ambas partes, <strong>{{ seller_name }}</strong> (Vendedor) y
+        <strong>{{ buyer_name }}</strong> (Comprador), sin necesidad de firma física y con total validez legal, según
+        los términos estipulados.
+    </div>
+
+    <p class="date">Fecha de Confirmación: <span class="highlight">{{ confirmation_date }}</span></p>
 </body>
 
 </html>

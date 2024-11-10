@@ -17,14 +17,13 @@ class SaleRepository:
             sale = Sale(
                 offer_id=sale_data.offer_id,
                 status=sale_data.status,
-                pdf_document_path=sale_data.pdf_document_path,
                 penalty_reason=sale_data.penalty_reason,
                 confirmation_date=datetime.datetime.utcnow(),
                 last_updated=datetime.datetime.utcnow(),
             )
             self.session.add(sale)
             await self.session.commit()
-            await self.session.refresh(sale)
+            await self.session.refresh(sale, ["offer"])
             return sale
         except SQLAlchemyError as e:
             logging.error(f"Error creating sale: {e}")
@@ -39,5 +38,24 @@ class SaleRepository:
         except SQLAlchemyError as e:
             # Puedes loguear el error o manejarlo como quieras
             print(f"Error al obtener la venta con offer_id={offer_id}: {e}")
-            # Opcionalmente, puedes lanzar una excepción personalizada o devolver None si no deseas interrumpir la ejecución.
+
             raise ValueError("Error al obtener la venta") from e
+
+    async def delete_sale(self, sale_id: int) -> None:
+        try:
+            query = select(Sale).where(Sale.id == sale_id)
+            result = await self.session.execute(query)
+            sale = result.scalars().first()
+            if sale:
+                await self.session.delete(sale)
+                await self.session.commit()
+                await self.session.refresh(sale, ["offer"])
+                logging.info(f"Sale with ID {sale_id} has been deleted successfully.")
+        except SQLAlchemyError as e:
+            logging.error(f"Error deleting sale with ID {sale_id}: {e}")
+            await self.session.rollback()
+            raise e
+
+    async def save_with_flush(self, sale: Sale):
+        await self.session.flush()
+        await self.session.refresh(sale)

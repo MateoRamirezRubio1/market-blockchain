@@ -25,7 +25,7 @@ class Sale(Base):
         DateTime, default=datetime.datetime.utcnow
     )  # Fecha de confirmación de la venta
     pdf_document_path: Mapped[str] = mapped_column(
-        String, nullable=False
+        String, nullable=True
     )  # Ruta al archivo PDF generado para la venta
     penalty_reason: Mapped[str] = mapped_column(
         String, nullable=True
@@ -36,3 +36,11 @@ class Sale(Base):
 
     # Relación con la oferta asociada
     offer = relationship("Offer", back_populates="sale")
+
+    async def verify_sales_compliance(self):
+        transfer_datetime_naive = self.offer.transfer_datetime.replace(tzinfo=None)
+
+        if datetime.datetime.utcnow() >= transfer_datetime_naive:
+            print("Making Verification")
+            self.status = SaleStatus.penalized
+            print("Verification maked")

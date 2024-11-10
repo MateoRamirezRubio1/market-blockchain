@@ -1,15 +1,13 @@
 const { provider, contractABI, contractAddress } = require('../config/ethersConfig');
 const { checkAndTransferEther } = require('../utils/etherUtils');
 const ethers = require('ethers');
-
-// Obtener la clave privada del usuario
 const getUserPrivateKey = require('../services/gcpSecretManagerService').accessSecret;
-const getUserAddressById = require('../services/blockchainService').getUserById;
+const getUserById = require('../services/blockchainService').getUserById;
 
-const createTrade = async (userId, tradeData) => {
+const createTrade = async (userId, sellerId, tradeData) => {
     try {
         // Obtener la dirección del usuario a partir del ID
-        const user = await getUserAddressById(userId);
+        const user = await getUserById(userId);
         const userAddress = user.public_key;
 
         // Crear instancia del contrato
@@ -74,8 +72,16 @@ const createTrade = async (userId, tradeData) => {
 
         const currentTimestamp = Math.floor(Date.now() / 1000);
 
+        // Obtener dirección publica del vendedor
+        const seller = await getUserById(sellerId);
+        const sellerPublicAddress = seller.public_key;
+
+        console.log(sellerPublicAddress);
+
+        tradeData.buyer = sellerPublicAddress;
+
         const gasEstimate = await contract.createTrade.estimateGas(
-            tradeData.buyer,
+            sellerPublicAddress,
             tradeData.energyAmount,
             tradeData.pricePerEnergyUnit,
             currentTimestamp, // tradeStart como el tiempo actual
@@ -88,7 +94,7 @@ const createTrade = async (userId, tradeData) => {
         console.log(`User balance in: ${userBalance}`);
 
         const tx = await contract.createTrade(
-            tradeData.buyer,
+            sellerPublicAddress,
             tradeData.energyAmount,
             tradeData.pricePerEnergyUnit,
             currentTimestamp, // tradeStart como el tiempo actual

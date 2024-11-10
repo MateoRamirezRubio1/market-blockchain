@@ -4,6 +4,7 @@ from app.infrastructure.database.db_connection import db_dependency, engine
 from app.infrastructure.database.base import Base
 from app.api.v1.endpoints import offers, sales
 from contextlib import asynccontextmanager
+from app.infrastructure.database.scheduler import scheduler_inicializer
 
 
 app = FastAPI()
@@ -11,6 +12,11 @@ app = FastAPI()
 # Include the routers
 app.include_router(offers.router, prefix="/api/v1/offers", tags=["offers"])
 app.include_router(sales.router, prefix="/api/v1/sales", tags=["sales"])
+
+
+@app.on_event("startup")
+async def iniciar_app():
+    scheduler_inicializer()
 
 
 @app.get("/")

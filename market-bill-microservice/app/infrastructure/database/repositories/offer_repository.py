@@ -7,6 +7,11 @@ from sqlalchemy.exc import SQLAlchemyError
 import logging
 
 
+# Exceptions
+class OfferCreationError(Exception):
+    pass
+
+
 def convert_to_naive(dt):
     if dt.tzinfo is not None:
         return dt.replace(tzinfo=None)
@@ -35,4 +40,19 @@ class OfferRepository:
         except SQLAlchemyError as e:
             logging.error(f"Error creating offer: {e}")
             await self.session.rollback()
-            raise e
+            raise OfferCreationError("Could not create offer") from e
+
+    async def get_offer_by_id(self, offer_id: int) -> Offer:
+        query = select(Offer).where(Offer.id == offer_id)
+        result = await self.session.execute(query)
+        return result.scalars().first()
+
+    async def save_with_flush(self, offer: Offer):
+        await self.session.flush()
+        await self.session.refresh(offer)
+        return offer
+
+    async def save_with_commit(self, offer: Offer):
+        await self.session.commit()
+        await self.session.refresh(offer)
+        return offer

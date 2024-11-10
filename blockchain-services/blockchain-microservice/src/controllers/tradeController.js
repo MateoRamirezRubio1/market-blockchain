@@ -3,13 +3,14 @@ const { validateCreateTrade, validateGetTradeById } = require('../utils/validati
 
 const createTrade = async (req, res) => {
     const userId = req.body.userId;
+    const sellerId = req.body.sellerId;
     const tradeData = req.body;
 
-    const { error } = validateCreateTrade(tradeData);
+    const { error } = validateCreateTrade(req.body);
     if (error) return res.status(400).json({ error: error.details[0].message });
 
     try {
-        const receipt = await tradeService.createTrade(userId, tradeData);
+        const receipt = await tradeService.createTrade(userId, sellerId, tradeData);
         return res.status(201).json({ message: 'Trade created successfully', receipt });
     } catch (error) {
         return res.status(500).json({ error: `Failed to create trade ${error}` });

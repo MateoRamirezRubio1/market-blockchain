@@ -36,7 +36,7 @@ CREATE TABLE sales (
     offer_id INT NOT NULL UNIQUE REFERENCES offers(id),
     status sale_status DEFAULT 'pending',
     confirmation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    pdf_document_path VARCHAR NOT NULL,
+    pdf_document_path VARCHAR,
     penalty_reason VARCHAR,
     last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -36,6 +36,8 @@ class OfferResponse(OfferCreate):
     status: OfferStatus  # Estado actual de la oferta
     created_at: datetime  # Fecha de creación
     last_updated: Optional[datetime] = None  # Última actualización (opcional)
+    buyer_id: Optional[int] = None
 
     class Config:
         orm_mode = True
+        from_attributes = True

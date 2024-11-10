@@ -16,11 +16,14 @@ const createWallet = async (userData) => {
     const wallet = ethers.Wallet.createRandom();
 
     try {
+        console.log(wallet.address);
         // Crear el usuario en la base de datos con la clave pública
         const user = await User.create({
             id: userData.id,
             public_key: wallet.address,
         });
+
+        console.log(user.public_key);
 
         // Solo si el usuario se crea con éxito, guardar la clave privada en GCP Secret Manager
         const secret = await createSecret(userData.id, wallet.privateKey);
