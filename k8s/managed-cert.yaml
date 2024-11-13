@@ -1,0 +1,8 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: gke-ssl-cert
+spec:
+  domains:
+    - learxyz.online  # Dominio en GoDaddy
+    - www.learxyz.online

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: miner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: miner
+  template:
+    metadata:
+      labels:
+        app: miner
+    spec:
+      containers:
+      - name: miner
+        image: gcr.io/solargauge/miner:latest
+        ports:
+        - containerPort: 8545
+        command: ["sh", "-c", "/red-crypto/start-node1.sh"]
+        volumeMounts:
+        - name: miner-storage
+          mountPath: /app/miner-data
+      volumes:
+      - name: miner-storage
+        emptyDir: {}

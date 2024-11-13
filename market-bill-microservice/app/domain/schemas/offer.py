@@ -21,7 +21,7 @@ class OfferStatus(str, Enum):
 
 # Esquema de entrada (para crear o actualizar una oferta)
 class OfferCreate(BaseModel):
-    seller_id: int
+    seller_id: str
     energy_amount: float  # Cantidad de energía ofrecida (en kWh)
     price_per_unit: float  # Precio por unidad de energía
     offer_type: OfferType  # Tipo de oferta (compra o venta)
@@ -36,7 +36,7 @@ class OfferResponse(OfferCreate):
     status: OfferStatus  # Estado actual de la oferta
     created_at: datetime  # Fecha de creación
     last_updated: Optional[datetime] = None  # Última actualización (opcional)
-    buyer_id: Optional[int] = None
+    buyer_id: Optional[str] = None
 
     class Config:
         orm_mode = True

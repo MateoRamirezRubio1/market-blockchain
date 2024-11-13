@@ -1,5 +1,8 @@
 from sqlalchemy.orm import Session
-from app.infrastructure.database.repositories.sale_repository import SaleRepository
+from app.infrastructure.database.repositories.sale_repository import (
+    SaleRepository,
+    SaleNotFoundError,
+)
 from app.domain.schemas.sale import SaleCreate, SaleStatus, SaleRead
 from app.domain.schemas.offer import OfferResponse
 from fastapi import HTTPException, status
@@ -16,11 +19,12 @@ import hashlib
 
 
 class SaleService:
+
     def __init__(
         self,
         sale_repository: SaleRepository,
-        offer_service: OfferService,
         session: AsyncSession,
+        offer_service: OfferService | None = None,
     ):
         self.sale_repository = sale_repository
         self.offer_service = offer_service
@@ -43,8 +47,9 @@ class SaleService:
         unique_pdf_document_path = await self.generate_unique_name(
             sale.id, sale.offer.seller_id, sale.offer.buyer_id
         )
+
         sale.pdf_document_path = str(unique_pdf_document_path)
-        await self.sale_repository.save_with_flush(sale)
+        sale = await self.sale_repository.save_with_flush(sale)
 
         # Actualizar el estado de la oferta a "accepted"
         offer_status_updated = await self.offer_service.update_offer_status(
@@ -87,13 +92,13 @@ class SaleService:
                         contract_data,
                     )
 
-                return blockchain_result
+                return sale_read_data
             except (httpx.HTTPStatusError, httpx.RequestError) as e:
                 # Revertir la venta y el estado de la oferta si hay error en el blockchain
                 await self.sale_repository.delete_sale(sale.id)
                 raise e
 
-    async def generate_unique_name(self, sale_id: int, buyer_id: int, seller_id: int):
+    async def generate_unique_name(self, sale_id: int, buyer_id: str, seller_id: str):
         # Concatenar los valores de los identificadores para que sean únicos
         unique_string = f"{sale_id}-{buyer_id}-{seller_id}"
 
@@ -105,3 +110,17 @@ class SaleService:
         unique_id = "0x" + sha256_hash[:32] + "0" * 32
 
         return f"{unique_id}"
+
+    async def get_all_sales(self):
+        try:
+            sales = await self.sale_repository.get_all_sales()
+            return sales
+        except SaleNotFoundError as e:
+            raise SaleNotFoundError(str(e)) from e
+
+    async def get_sale_by_id(self, sale_id: int):
+        try:
+            sale = await self.sale_repository.get_sale_by_id(sale_id)
+            return sale
+        except SaleNotFoundError as e:
+            raise SaleNotFoundError(str(e)) from e

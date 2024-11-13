@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: market-bill-config
+data:
+  PORT: "3000"
+  GCP_PROJECT_ID: "solargauge"
+  GCP_PROJECT_NUMBER: "325305452074"
+  NODE_URL: "http://miner:8545"
+  CONTRACT_ADDRESS: "0xC7BAE8B5081c4221187cdA0b49D67247D656BCA0"

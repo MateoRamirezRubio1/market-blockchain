@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-market
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-market
+  template:
+    metadata:
+      labels:
+        app: db-market
+    spec:
+      containers:
+      - name: db-market
+        image: postgres:13  # Usa la imagen oficial de PostgreSQL
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: market-bill-secrets
+              key: DB_NAME
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: market-bill-secrets
+              key: DB_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: market-bill-secrets
+              key: DB_PASSWORD
+        volumeMounts:
+        - name: init-db
+          mountPath: /docker-entrypoint-initdb.d  # Ruta donde se ejecutarán los scripts
+      volumes:
+      - name: init-db
+        configMap:
+          name: market-bill-db-init-scripts  # Nombre del ConfigMap con el script

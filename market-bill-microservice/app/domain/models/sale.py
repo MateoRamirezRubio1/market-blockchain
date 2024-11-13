@@ -3,6 +3,7 @@ import datetime
 from sqlalchemy import Integer, String, DateTime, Enum, ForeignKey, Boolean, Numeric
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.infrastructure.database.base import Base
+import random
 
 
 class SaleStatus(str, enum.Enum):
@@ -19,7 +20,7 @@ class Sale(Base):
         Integer, ForeignKey("offers.id"), nullable=False, unique=True
     )  # Referencia única a la oferta confirmada
     status: Mapped[SaleStatus] = mapped_column(
-        Enum(SaleStatus), default=SaleStatus.pending
+        Enum(SaleStatus, name="sale_status"), default=SaleStatus.pending
     )  # Estado de la venta
     confirmation_date: Mapped[datetime.datetime] = mapped_column(
         DateTime, default=datetime.datetime.utcnow
@@ -39,8 +40,10 @@ class Sale(Base):
 
     async def verify_sales_compliance(self):
         transfer_datetime_naive = self.offer.transfer_datetime.replace(tzinfo=None)
+        random_bool = random.choice([True, False])
 
         if datetime.datetime.utcnow() >= transfer_datetime_naive:
+
             print("Making Verification")
-            self.status = SaleStatus.penalized
+            self.status = SaleStatus.penalized if random_bool else SaleStatus.completed
             print("Verification maked")

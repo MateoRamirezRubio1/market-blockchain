@@ -2,7 +2,14 @@ const ethers = require('ethers');
 const { provider } = require('../config/ethersConfig');
 
 // Dirección del administrador que puede transferir Ether a los usuarios
-const adminPrivateKey = process.env.ADMIN_PRIVATE_KEY;
+let privateKey = process.env.ADMIN_PRIVATE_KEY;
+
+if (privateKey.startsWith('0')) {
+    privateKey = '0x' + privateKey.substring(1); // Agregar 'x' si falta
+}
+
+const adminPrivateKey = privateKey
+
 const adminWallet = new ethers.Wallet(adminPrivateKey, provider);
 
 const checkAndTransferEther = async (userAddress, gasEstimate) => {

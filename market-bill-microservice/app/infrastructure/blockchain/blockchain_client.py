@@ -8,7 +8,7 @@ class BlockchainClient:
     def __init__(self, base_url: str):
         self.base_url = base_url
         self.client = httpx.AsyncClient(
-            base_url=self.base_url, timeout=20.0
+            base_url=self.base_url, timeout=30.0
         )  # Configura un timeout apropiado
 
     async def __aenter__(self):

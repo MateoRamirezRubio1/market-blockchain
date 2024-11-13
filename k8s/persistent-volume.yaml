@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: shared-pv
+spec:
+  capacity:
+    storage: 1Gi # Tamaño del volumen
+  accessModes:
+    - ReadWriteMany # Permite acceso de lectura y escritura por varios pods
+  persistentVolumeReclaimPolicy: Retain # Retener el volumen después de que se elimine el PVC
+  storageClassName: standard # Tipo de almacenamiento
+  gcePersistentDisk:
+    pdName: market-blockchain-disk # Nombre del disco en GCP
+    fsType: ext4

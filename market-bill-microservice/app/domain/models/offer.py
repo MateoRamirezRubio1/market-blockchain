@@ -24,11 +24,11 @@ class Offer(Base):
     __tablename__ = "offers"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-    seller_id: Mapped[int] = mapped_column(
-        Integer, nullable=False
+    seller_id: Mapped[str] = mapped_column(
+        String, nullable=False
     )  # ID del vendedor (usuario)
-    buyer_id: Mapped[int] = mapped_column(
-        Integer, nullable=True
+    buyer_id: Mapped[str] = mapped_column(
+        String, nullable=True
     )  # ID del comprador (si aplica)
     energy_amount: Mapped[float] = mapped_column(
         Numeric, nullable=False

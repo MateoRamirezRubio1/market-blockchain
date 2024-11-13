@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: shared-pvc
+spec:
+  accessModes:
+    - ReadWriteMany  # El mismo acceso que el PV
+  resources:
+    requests:
+      storage: 1Gi  # Tamaño solicitado (debe coincidir con el tamaño del PV)
+  storageClassName: standard

@@ -25,7 +25,7 @@ class SaleBase(BaseModel):
 
 # Esquema para crear una venta (sin campos autogenerados)
 class SaleCreate(SaleBase):
-    buyer_id: Optional[int] = None
+    buyer_id: Optional[str] = None
 
 
 # Esquema para leer una venta (incluye todos los campos)

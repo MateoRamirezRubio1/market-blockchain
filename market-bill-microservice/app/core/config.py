@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
 
     DATABASE_URL: str = (
-        "postgresql+asyncpg://postgres:root123@db_market:5432/market_bill_microservice"
+        "postgresql+asyncpg://postgres:root123@db-market-service:5432/market_bill_microservice"
     )
     BLOCKCHAIN_SERVICE_URL: str = "http://backend:3000/api/v1"
 

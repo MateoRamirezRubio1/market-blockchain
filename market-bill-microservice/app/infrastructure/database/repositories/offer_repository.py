@@ -12,6 +12,10 @@ class OfferCreationError(Exception):
     pass
 
 
+class OfferNotFoundError(Exception):
+    pass
+
+
 def convert_to_naive(dt):
     if dt.tzinfo is not None:
         return dt.replace(tzinfo=None)
@@ -42,10 +46,20 @@ class OfferRepository:
             await self.session.rollback()
             raise OfferCreationError("Could not create offer") from e
 
+    async def get_all_offers(self):
+        result = await self.session.execute(select(Offer))
+        offers = result.scalars().all()
+        if not offers:
+            raise OfferNotFoundError("No offers available at the moment.")
+        return offers
+
     async def get_offer_by_id(self, offer_id: int) -> Offer:
         query = select(Offer).where(Offer.id == offer_id)
         result = await self.session.execute(query)
-        return result.scalars().first()
+        offer = result.scalars().first()
+        if not offer:
+            raise OfferNotFoundError(f"Offer with ID {offer_id} not found.")
+        return offer
 
     async def save_with_flush(self, offer: Offer):
         await self.session.flush()

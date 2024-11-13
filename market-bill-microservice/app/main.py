@@ -5,9 +5,18 @@ from app.infrastructure.database.base import Base
 from app.api.v1.endpoints import offers, sales
 from contextlib import asynccontextmanager
 from app.infrastructure.database.scheduler import scheduler_inicializer
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Permite todos los origenes
+    allow_credentials=True,
+    allow_methods=["*"],  # Permite todos los métodos (GET, POST, etc.)
+    allow_headers=["*"],  # Permite todos los encabezados
+)
 
 # Include the routers
 app.include_router(offers.router, prefix="/api/v1/offers", tags=["offers"])
@@ -30,4 +39,4 @@ async def welcome(db: AsyncSession = Depends(db_dependency)):
     Returns:
         dict: A simple message indicating that the API is up and running.
     """
-    return {"message": "Welcome to the User authentication and management API"}
+    return {"message": "Welcome to the Market Bill Microservices API"}

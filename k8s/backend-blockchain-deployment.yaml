@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: gcr.io/solargauge/backend:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: market-bill-config
+              key: PORT
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: "/app/solargauge-66f76767c6a9.json"
+        - name: GCP_PROJECT_ID
+          valueFrom:
+            configMapKeyRef:
+              name: market-bill-config
+              key: GCP_PROJECT_ID
+        - name: GCP_PROJECT_NUMBER
+          valueFrom:
+            configMapKeyRef:
+              name: market-bill-config
+              key: GCP_PROJECT_NUMBER
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: market-bill-secrets
+              key: DB_NAME
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: market-bill-secrets
+              key: DB_HOST
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: market-bill-secrets
+              key: DB_USER
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: market-bill-secrets
+              key: DB_PASSWORD
+        - name: ADMIN_PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: market-bill-secrets
+              key: ADMIN_PRIVATE_KEY
+        - name: NODE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: market-bill-config
+              key: NODE_URL
+        - name: CONTRACT_ADDRESS
+          valueFrom:
+            configMapKeyRef:
+              name: market-bill-config
+              key: CONTRACT_ADDRESS
+        volumeMounts:
+        - name: google-credentials-volume
+          mountPath: "/app/solargauge-66f76767c6a9.json"
+          subPath: solargauge-66f76767c6a9.json
+        - name: init-db
+          mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: google-credentials-volume
+          secret:
+            secretName: google-credentials
+        - name: init-db
+          configMap:
+            name: backend-db-init-scripts

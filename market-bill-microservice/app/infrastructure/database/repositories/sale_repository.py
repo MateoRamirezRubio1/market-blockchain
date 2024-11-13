@@ -6,6 +6,11 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.future import select
 import datetime
 import logging
+from sqlalchemy.orm import selectinload
+
+
+class SaleNotFoundError(Exception):
+    pass
 
 
 class SaleRepository:
@@ -22,7 +27,7 @@ class SaleRepository:
                 last_updated=datetime.datetime.utcnow(),
             )
             self.session.add(sale)
-            await self.session.commit()
+            await self.session.flush()
             await self.session.refresh(sale, ["offer"])
             return sale
         except SQLAlchemyError as e:
@@ -30,9 +35,30 @@ class SaleRepository:
             await self.session.rollback()
             raise e
 
+    async def get_all_sales(self):
+        result = await self.session.execute(
+            select(Sale).options(selectinload(Sale.offer))
+        )
+        sales = result.scalars().all()
+        if not sales:
+            raise SaleNotFoundError("No offers available at the moment.")
+        return sales
+
+    async def get_sale_by_id(self, sale_id: int) -> Sale:
+        query = select(Sale).options(selectinload(Sale.offer)).where(Sale.id == sale_id)
+        result = await self.session.execute(query)
+        sale = result.scalars().first()
+        if not sale:
+            raise SaleNotFoundError(f"Offer with ID {sale_id} not found.")
+        return sale
+
     async def get_sale_by_offer_id(self, offer_id: int) -> Sale:
         try:
-            query = select(Sale).where(Sale.offer_id == offer_id)
+            query = (
+                select(Sale)
+                .options(selectinload(Sale.offer))
+                .where(Sale.offer_id == offer_id)
+            )
             result = await self.session.execute(query)
             return result.scalars().first()
         except SQLAlchemyError as e:
@@ -59,3 +85,4 @@ class SaleRepository:
     async def save_with_flush(self, sale: Sale):
         await self.session.flush()
         await self.session.refresh(sale)
+        return sale

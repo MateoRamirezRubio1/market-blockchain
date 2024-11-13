@@ -1,9 +1,24 @@
-CREATE DATABASE IF NOT EXISTS market_bill_microservice;
+DO
+$$
+BEGIN
+   IF NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = 'market_bill_microservice') THEN
+      CREATE DATABASE market_bill_microservice;
+   END IF;
+EXCEPTION
+   WHEN OTHERS THEN
+      -- Si hay un error (por ejemplo, si la base de datos ya existe), lo ignoramos
+      RAISE NOTICE 'Base de datos ya existe o no se pudo crear';
+END
+$$;
+
+
+CREATE DATABASE market_bill_microservice;
 
 \c market_bill_microservice;
 
 DROP TYPE IF EXISTS offertype;
 DROP TYPE IF EXISTS offerstatus;
+DROP TYPE IF EXISTS sale_status;
 
 -- Crear el tipo enumerado OfferType
 CREATE TYPE offertype AS ENUM ('buy', 'sell');
@@ -14,8 +29,8 @@ CREATE TYPE offerstatus AS ENUM ('draft', 'active', 'reserved', 'expired', 'canc
 -- Crear la tabla offers
 CREATE TABLE IF NOT EXISTS offers (
     id SERIAL PRIMARY KEY,
-    seller_id INTEGER NOT NULL,  -- ID del vendedor
-    buyer_id INTEGER,  -- ID del comprador, puede ser nulo
+    seller_id VARCHAR NOT NULL,  -- ID del vendedor
+    buyer_id VARCHAR,  -- ID del comprador, puede ser nulo
     energy_amount NUMERIC NOT NULL,  -- Cantidad de energía en kWh
     price_per_unit NUMERIC NOT NULL,  -- Precio por unidad de energía
     offer_type offertype NOT NULL,  -- Tipo de oferta (compra o venta)

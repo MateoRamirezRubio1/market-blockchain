@@ -41,106 +41,102 @@ def create_contract_pdf(filename, contract_data):
     elements = []
 
     # Título del contrato
-    elements.append(Paragraph("Contrato de Transacción de Energía", title_style))
+    elements.append(Paragraph("Energy Transaction Agreement", title_style))
     elements.append(Spacer(1, 12))
 
     # Fecha de emisión
     elements.append(
         Paragraph(
-            f"Fecha de Emisión del Contrato: {contract_data['confirmation_date']}",
+            f"Date of Issue of the Contract: {contract_data['confirmation_date']}",
             content_style,
         )
     )
     elements.append(Spacer(1, 12))
 
     # Parte 1: Partes Contratantes
-    elements.append(Paragraph("1. Partes Contratantes", subtitle_style))
+    elements.append(Paragraph("1. Contracting Parties", subtitle_style))
     elements.append(
-        Paragraph(f"<b>Vendedor:</b> {contract_data['seller_name']}", content_style)
+        Paragraph(f"<b>Seller:</b> {contract_data['seller_name']}", content_style)
     )
     elements.append(
-        Paragraph(f"<b>Comprador:</b> {contract_data['buyer_name']}", content_style)
+        Paragraph(f"<b>Buyer:</b> {contract_data['buyer_name']}", content_style)
     )
     elements.append(
         Paragraph(
-            "Ambas partes acuerdan los términos y condiciones del presente contrato, actuando en buena fe y conforme a las disposiciones legales vigentes aplicables.",
+            "Both parties agree to the terms and conditions of this contract, acting in good faith and in accordance with the applicable legal provisions in force.",
             content_style,
         )
     )
     elements.append(Spacer(1, 12))
 
     # Parte 2: Objeto del Contrato
-    elements.append(Paragraph("2. Objeto del Contrato", subtitle_style))
+    elements.append(Paragraph("2. Subject Matter of the Contract", subtitle_style))
     elements.append(
         Paragraph(
-            f"<b>Hash de la Oferta en la red blockchain:</b> {contract_data['offer_hash']}",
+            f"<b>Offering Hash on the blockchain network:</b> {contract_data['offer_hash']}",
             content_style,
         )
     )
     elements.append(
         Paragraph(
-            f"<b>Cantidad de Energía:</b> {contract_data['energy_amount']} kWh",
+            f"<b>Amount of energy:</b> {contract_data['energy_amount']} kWh",
             content_style,
         )
     )
     elements.append(
         Paragraph(
-            f"<b>Precio por Unidad de Energía:</b> {contract_data['price_per_unit']} USD/kWh",
+            f"<b>Price per Unit of Energy:</b> {contract_data['price_per_unit']} USD/kWh",
             content_style,
         )
     )
     elements.append(
-        Paragraph(
-            f"<b>Tipo de Oferta:</b> {contract_data['offer_type']}", content_style
-        )
+        Paragraph(f"<b>Type of Offer:</b> {contract_data['offer_type']}", content_style)
+    )
+    elements.append(
+        Paragraph(f"<b>Bid Status:</b> {contract_data['status']}", content_style)
     )
     elements.append(
         Paragraph(
-            f"<b>Estado de la Oferta:</b> {contract_data['status']}", content_style
-        )
-    )
-    elements.append(
-        Paragraph(
-            "Este contrato representa un compromiso vinculante para la compra-venta de la cantidad de energía indicada en las condiciones especificadas. La confirmación de la oferta implica aceptación total de estos términos.",
+            "This contract represents a binding commitment for the purchase and sale of the indicated amount of energy under the specified conditions. Confirmation of the offer implies full acceptance of these terms.",
             content_style,
         )
     )
     elements.append(Spacer(1, 12))
 
     # Parte 3: Condiciones de Cumplimiento
-    elements.append(Paragraph("3. Condiciones de Cumplimiento", subtitle_style))
+    elements.append(Paragraph("3. Conditions of Compliance", subtitle_style))
     elements.append(
         Paragraph(
-            f"<b>Fecha y Hora de Transferencia de Energía:</b> {contract_data['transfer_datetime']}",
+            f"<b>Date and Time of Energy Transfer:</b> {contract_data['transfer_datetime']}",
             content_style,
         )
     )
     elements.append(
         Paragraph(
-            "Ambas partes acuerdan que, a la fecha y hora señaladas para la transferencia de energía, se procederá con la evaluación de cumplimiento de todas las condiciones estipuladas en este contrato. La verificación de cumplimiento será ejecutada por un tercero imparcial y registrado, en conformidad con las disposiciones establecidas.",
+            "Both parties agree that, at the date and time indicated for the transfer of energy, the evaluation of compliance with all the conditions stipulated in this contract will be carried out. The verification of compliance will be performed by an impartial and registered third party, in accordance with the established provisions.",
             content_style,
         )
     )
     elements.append(Spacer(1, 12))
 
     # Parte 4: Penalización por Incumplimiento
-    elements.append(Paragraph("4. Penalización por Incumplimiento", subtitle_style))
+    elements.append(Paragraph("4. Penalty for noncompliance", subtitle_style))
     elements.append(
         Paragraph(
-            f"<b>Penalización que será aplicada:</b> {contract_data['penalty_reason']}",
+            f"<b>Penalty to be applied:</b> {contract_data['penalty_reason']}",
             content_style,
         )
     )
     elements.append(
         Paragraph(
-            "La penalización se aplicará en caso de que cualquiera de las partes incumpla las obligaciones estipuladas en este contrato en la fecha y hora designadas para la transferencia de energía. Dicha penalización será ejecutada conforme a las disposiciones legales aplicables, incluyendo cualquier disposición o normativa reguladora en vigor.",
+            "The penalty shall apply in the event that either party fails to comply with the obligations stipulated in this contract on the date and time designated for the transfer of energy. Such penalty shall be enforced in accordance with the applicable legal provisions, including any regulatory provisions or regulations in force.",
             content_style,
         )
     )
     elements.append(Spacer(1, 12))
 
     # Parte 5: Términos y Condiciones Generales
-    elements.append(Paragraph("5. Términos y Condiciones Generales", subtitle_style))
+    elements.append(Paragraph("5. General Terms and Conditions", subtitle_style))
     elements.append(
         Paragraph(
             contract_data["terms_conditions"],
@@ -149,17 +145,17 @@ def create_contract_pdf(filename, contract_data):
     )
     elements.append(
         Paragraph(
-            "Este contrato está sujeto a las leyes y regulaciones vigentes en la jurisdicción de las partes contratantes. Las partes acuerdan cumplir con cualquier disposición adicional impuesta por la regulación local o nacional.",
+            "This contract is subject to the laws and regulations in force in the jurisdiction of the contracting parties. The parties agree to comply with any additional provisions imposed by local or national regulation.",
             content_style,
         )
     )
     elements.append(Spacer(1, 12))
 
     # Parte 6: Resolución de Disputas
-    elements.append(Paragraph("6. Resolución de Disputas", subtitle_style))
+    elements.append(Paragraph("6. Dispute Resolution", subtitle_style))
     elements.append(
         Paragraph(
-            "Cualquier disputa surgida en relación con el cumplimiento, interpretación, o ejecución de este contrato será resuelta mediante conciliación entre las partes. En caso de no lograr una conciliación, las partes podrán acudir a los tribunales competentes o someterse a arbitraje, según sea aplicable y acordado por las partes.",
+            "Any dispute arising in connection with the performance, interpretation, or execution of this contract shall be settled by conciliation between the parties. In case of failure to reach a conciliation, the parties may resort to the competent courts or submit to arbitration, as applicable and agreed by the parties.",
             content_style,
         )
     )
@@ -168,7 +164,7 @@ def create_contract_pdf(filename, contract_data):
     # Nota de Aprobación
     elements.append(
         Paragraph(
-            f"Este contrato ha sido revisado y aprobado por ambas partes, {contract_data['seller_name']} (Vendedor) y {contract_data['buyer_name']} (Comprador), quienes declaran que entienden y aceptan todos los términos y condiciones aquí expuestos.",
+            f"This contract has been reviewed and approved by both parties, {contract_data['seller_name']} (Seller) and {contract_data['buyer_name']} (Buyer), who represent that they understand and agree to all the terms and conditions set forth herein.",
             content_style,
         )
     )
@@ -177,7 +173,7 @@ def create_contract_pdf(filename, contract_data):
     # Fecha de Confirmación
     elements.append(
         Paragraph(
-            f"Fecha de Confirmación: {contract_data['confirmation_date']}",
+            f"Confirmation Date: {contract_data['confirmation_date']}",
             content_style,
         )
     )

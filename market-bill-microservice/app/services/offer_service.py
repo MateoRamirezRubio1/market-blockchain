@@ -9,7 +9,9 @@ class OfferNotFoundError(Exception):
 
 
 class InvalidStateTransitionError(Exception):
-    pass
+    def __init__(self, message: str):
+        self.message = message
+        super().__init__(message)
 
 
 class OfferService:
@@ -18,6 +20,20 @@ class OfferService:
 
     async def create_offer(self, offer_create: OfferCreate) -> Offer:
         return await self.offer_repository.create_offer(offer_create)
+
+    async def get_all_offers(self):
+        try:
+            offers = await self.offer_repository.get_all_offers()
+            return offers
+        except OfferNotFoundError as e:
+            raise OfferNotFoundError(str(e)) from e
+
+    async def get_offer_by_id(self, offer_id: int):
+        try:
+            offer = await self.offer_repository.get_offer_by_id(offer_id)
+            return offer
+        except OfferNotFoundError as e:
+            raise OfferNotFoundError(str(e)) from e
 
     async def update_offer_status(
         self, offer_id: int, new_status: OfferStatus, comes_from_sale: bool = False
@@ -39,7 +55,9 @@ class OfferService:
         ):
             offer.status = new_status
         else:
-            raise InvalidStateTransitionError("Invalid state transition")
+            raise InvalidStateTransitionError(
+                f"No se puede cambiar el estado de {offer.status} a {new_status}"
+            )
 
         (
             await self.offer_repository.save_with_commit(offer)
@@ -49,7 +67,7 @@ class OfferService:
 
         return offer
 
-    async def update_buyer_offer(self, offer_id: int, buyer_id: int) -> OfferResponse:
+    async def update_buyer_offer(self, offer_id: int, buyer_id: str) -> OfferResponse:
         offer = await self.offer_repository.get_offer_by_id(offer_id)
         if not offer:
             raise OfferNotFoundError("Offer not found")

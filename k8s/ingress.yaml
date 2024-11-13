@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gke-ingress
+  annotations:
+    networking.gke.io/managed-certificates: gke-ssl-cert
+spec:
+  ingressClassName: "gce"
+  rules:
+  - host: learxyz.online  # Tu dominio en GoDaddy
+    http:
+      paths:
+      - path: /backend
+        pathType: Prefix
+        backend:
+          service:
+            name: backend
+            port:
+              number: 3000
+      - path: /market-bill-service
+        pathType: Prefix
+        backend:
+          service:
+            name: market-bill-service
+            port:
+              number: 4000
+  tls:
+  - hosts:
+      - learxyz.online
+
