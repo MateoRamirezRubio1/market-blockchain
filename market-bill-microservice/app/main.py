@@ -10,13 +10,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Permite todos los origenes
-    allow_credentials=True,
-    allow_methods=["*"],  # Permite todos los métodos (GET, POST, etc.)
-    allow_headers=["*"],  # Permite todos los encabezados
-)
+
+@app.options("/{rest_of_path:path}")
+async def options_handler(rest_of_path: str):
+    return {"message": "CORS preflight allowed"}
+
 
 # Include the routers
 app.include_router(offers.router, prefix="/api/v1/offers", tags=["offers"])
